@@ -25,13 +25,9 @@
   <body ng-app="app">
     <ion-content class="content">
       <div ng-controller="MainController" id="main-controller-styles">
-        <div>
-          <input type="number" ng-model="input.usd" ng-change="usdToCad()" class="currency-input">
-          <span class="currency-type">USD</span>
-        </div>
-        <div>
-          <input type="number" ng-model="input.cad" ng-change="cadToUsd()" class="currency-input">
-          <span class="currency-type">CAD</span>
+        <div ng-repeat="currency in currencies">
+          <input type="number" ng-model="currenciesModel[currency]" ng-change="valueChange(currency)" class="currency-input">
+          <span class="currency-type">{{currency | uppercase}}</span>
         </div>
         <button ng-click="resetInputs()" id="reset-inputs">Reset</button>
         <!-- <ion-checkbox ng-model="checkbox.visa" ng-checked="checkbox.visa" ng-change="checkboxVisaChange()">Use Visa's exchange rate</ion-checkbox> -->

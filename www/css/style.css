@@ -4,24 +4,29 @@
 }
 
 #main-controller-styles {
-  font-size: 48px;
   padding: 90px 20px;
 }
 
 .currency-input {
+  font-size: 43px !important;
   display: inline-block !important;
-  font-size: 48px !important;
-  width: 132px;
+  width: 100%;
+  max-width: calc(100% - 100px);
   border: 1px #ccc solid !important;
-  margin: 5px 0;
+  margin: 5px 2px 5px 0;
+  height: auto !important;
+  padding-top: 0 !important;
+  padding-left: 4px !important;
 }
 
 .currency-type {
   vertical-align: middle;
+  font-size: 43px;
 }
 
 #reset-inputs {
-  margin-top: 20px;
+  margin-top: 50px;
   font-size: 32px;
-  float: right;
+  width: 100%;
+  padding-bottom: 5px;
 }

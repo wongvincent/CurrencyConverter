@@ -1,30 +1,46 @@
 angular.module('app').controller('MainController', ['$scope', function($scope) {
-  var oneUSDToCADVisa = 1.311769; //uses Visa's exchange rate, assuming Card is a CAD card
+  $scope.currencies = ["cad", "usd", "jpy", "krw"];
+  var oneUSDTo = {
+    "cad" : 1.350550,
+    "jpy" : 110.877000,
+    "krw" : 1181.645000,
+    "usd" : 1
+  };
+
+  $scope.currenciesModel = {
+    "cad" : null,
+    "usd" : null,
+    "jpy" : null,
+    "krw" : null
+  };
 
   //$scope.checkbox.visa = true;
-
-  $scope.usdToCad = function() {
-    var usdInput = $scope.input.usd;
-    var result = round(usdInput * oneUSDToCADVisa, 2);
-    if (!result) {
-      result = null;
-    }
-    $scope.input.cad = result;
+  $scope.valueChange = function (currency) {
+    updateAll(currency);
   };
 
-  $scope.cadToUsd = function() {
-    var cadInput = $scope.input.cad;
-    var result = round(cadInput * 1/oneUSDToCADVisa, 2);
-    if (!result) {
-      result = null;
+  var updateAll = function (currencyToNotUpdate) {
+    var valueOfCurrency = $scope.currenciesModel[currencyToNotUpdate];
+    for (var key in $scope.currenciesModel) {
+      $scope.currenciesModel[key] = roundOrNull(convertCurrency(currencyToNotUpdate, key, valueOfCurrency), 2);
     }
-    $scope.input.usd = result;
   };
+
+  function convertCurrency (fromCurrency, toCurrency, value) {
+    var usdValue = value / oneUSDTo[fromCurrency];
+    return usdValue * oneUSDTo[toCurrency];
+  }
 
   $scope.resetInputs = function() {
-    $scope.input.cad = null;
-    $scope.input.usd = null;
+    for (var key in $scope.currenciesModel) {
+      $scope.currenciesModel[key] = null;
+    }
   };
+
+  function roundOrNull(value, decimals) {
+    var roundedValue = round(value, decimals);
+    return (roundedValue === 0) ? null : roundedValue;
+  }
 
   function round(value, decimals) {
     return Number(Math.round(value+'e'+decimals)+'e-'+decimals);
