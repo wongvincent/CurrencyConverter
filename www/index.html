@@ -27,9 +27,10 @@
       <div ng-controller="MainController" id="main-controller-styles">
         <div ng-repeat="currency in currencies">
           <input type="number" ng-model="currenciesModel[currency]" ng-change="valueChange(currency)" class="currency-input">
-          <span class="currency-type">{{currency | uppercase}}</span>
+          <span class="currency-type">{{currency}}</span>
         </div>
         <button ng-click="resetInputs()" id="reset-inputs">Reset</button>
+        <div id="lastUpdated">Rates as of: {{exchangeRateLastUpdated | date:'MMM d, y HH:mm Z'}}</div>
         <!-- <ion-checkbox ng-model="checkbox.visa" ng-checked="checkbox.visa" ng-change="checkboxVisaChange()">Use Visa's exchange rate</ion-checkbox> -->
       </div>
     </ion-content>

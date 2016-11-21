@@ -25,8 +25,24 @@
 }
 
 #reset-inputs {
-  margin-top: 50px;
+  margin: 40px 0;
   font-size: 32px;
   width: 100%;
   padding-bottom: 5px;
+}
+
+#lastUpdated {
+  text-align: right;
+  margin: 10px 0;
+}
+
+.spinner svg {
+  width: 50vw;
+  height: 20vw;
+  stroke: #fff;
+  fill: #fff;
+}
+
+.loading-container .loading {
+  background-color: rgba(0, 0, 0, 0.0);
 }
