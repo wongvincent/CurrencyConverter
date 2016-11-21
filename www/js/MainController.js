@@ -1,23 +1,184 @@
-angular.module('app').controller('MainController', ['$scope', '$http', '$ionicLoading', function($scope, $http, $ionicLoading) {
-  /* To add a new currency, add it to $scope.currencies and oneUSDTo, and $scope.currenciesModel.
-  * update oneUSDTo values for all currencies, and update $scope.exchangeRateLastUpdated value */
-  $scope.currencies = ["CAD", "USD", "JPY", "KRW"];
+angular.module('app').controller('MainController', ['$scope', '$http', '$ionicLoading', '$ionicModal', function($scope, $http, $ionicLoading) {
+
+  $scope.currencies = {
+    "AUD":{
+      "show": false,
+      "fullname": "Australian Dollar"
+    },
+    "BGN":{
+      "show": false,
+      "fullname": "Bulgarian Lev"
+    },
+    "BRL":{
+      "show": false,
+      "fullname": "Brazilian Real"
+    },
+    "CAD":{
+      "show": true,
+      "fullname": "Canadian Dollar"
+    },
+    "CHF":{
+      "show": false,
+      "fullname": "Swiss Franc"
+    },
+    "CNY":{
+      "show": false,
+      "fullname": "Chinese Yuan"
+    },
+    "CZK":{
+      "show": false,
+      "fullname": "Czech Koruna"
+    },
+    "DKK":{
+      "show": false,
+      "fullname": "Danish Krone"
+    },
+    "EUR":{
+      "show": true,
+      "fullname": "Euro"
+    },
+    "GBP":{
+      "show": false,
+      "fullname": "British Pound"
+    },
+    "HKD":{
+      "show": false,
+      "fullname": "Hong Kong Dollar"
+    },
+    "HRK":{
+      "show": false,
+      "fullname": "Croatian Kuna"
+    },
+    "HUF":{
+      "show": false,
+      "fullname": "Hungarian Forint"
+    },
+    "IDR":{
+      "show": false,
+      "fullname": "Indonesian Rupiah"
+    },
+    "ILS":{
+      "show": false,
+      "fullname": "Israeli Shekel"
+    },
+    "INR":{
+      "show": false,
+      "fullname": "Indian Rupee"
+    },
+    "JPY":{
+      "show": true,
+      "fullname": "Japanese Yen"
+    },
+    "KRW":{
+      "show": true,
+      "fullname": "South Korean Won"
+    },
+    "MXN":{
+      "show": false,
+      "fullname": "Mexican Peso"
+    },
+    "MYR":{
+      "show": false,
+      "fullname": "Malaysian Ringgit"
+    },
+    "NOK":{
+      "show": false,
+      "fullname": "Norwegian Krone"
+    },
+    "NZD":{
+      "show": false,
+      "fullname": "New Zealand Dollar"
+    },
+    "PHP":{
+      "show": false,
+      "fullname": "Philippine Peso"
+    },
+    "PLN":{
+      "show": false,
+      "fullname": "Polish Zloty"
+    },
+    "RON":{
+      "show": false,
+      "fullname": "Romanian New Leu"
+    },
+    "RUB":{
+      "show": false,
+      "fullname": "Russian Ruble"
+    },
+    "SEK":{
+      "show": false,
+      "fullname": "Swedish Krona"
+    },
+    "SGD":{
+      "show": false,
+      "fullname": "Singapore Dollar"
+    },
+    "THB":{
+      "show": false,
+      "fullname": "Thai Baht"
+    },
+    "TRY":{
+      "show": false,
+      "fullname": "Turkish Lira"
+    },
+    "USD":{
+      "show": true,
+      "fullname": "US Dollar"
+    },
+    "ZAR":{
+      "show": false,
+      "fullname": "South African Rand"
+    }
+  };
+
+  /* *** if update oneUSDTo, please append "USD":1. Also update $scope.exchangeRateLastUpdated. ***
+   * oneUSDTo is purposely left out of $scope.currencies object because it makes updating oneUSDTo easier,
+   * as it just means copying and pasting the results of the API call.
+   * */
   var oneUSDTo = {
-    "CAD" : 1.350550,
-    "JPY" : 110.877000,
-    "KRW" : 1181.645000,
-    "USD" : 1
+    "AUD":1.3525,
+    "BGN":1.8401,
+    "BRL":3.3916,
+    "CAD":1.3515,
+    "CHF":1.0077,
+    "CNY":6.8827,
+    "CZK":25.435,
+    "DKK":6.9996,
+    "GBP":0.81116,
+    "HKD":7.7571,
+    "HRK":7.0863,
+    "HUF":291.18,
+    "IDR":13428.0,
+    "ILS":3.8727,
+    "INR":67.943,
+    "JPY":110.03,
+    "KRW":1176.2,
+    "MXN":20.413,
+    "MYR":4.404,
+    "NOK":8.5651,
+    "NZD":1.4181,
+    "PHP":49.569,
+    "PLN":4.18,
+    "RON":4.2478,
+    "RUB":64.723,
+    "SEK":9.2429,
+    "SGD":1.4213,
+    "THB":35.51,
+    "TRY":3.368,
+    "USD":1,
+    "ZAR":14.375,
+    "EUR":0.94082
   };
 
   // month is month-1. yyyy, mm, day, hours, minutes, seconds, milliseconds
-  $scope.exchangeRateLastUpdated = new Date(Date.UTC (2016, 10, 19, 12, 0, 0));
+  $scope.exchangeRateLastUpdated = new Date(Date.UTC (2016, 10, 18, 15, 0, 0));
 
-  $scope.currenciesModel = {
-    "CAD" : null,
-    "JPY" : null,
-    "KRW" : null,
-    "USD" : null
-  };
+  function createCurrenciesModel() {
+    $scope.currenciesModel = {};
+    for (var key in $scope.currencies) {
+      $scope.currenciesModel[key] = null;
+    }
+  }
 
   //$scope.checkbox.visa = true;
   $scope.valueChange = function (currency) {
@@ -73,21 +234,8 @@ angular.module('app').controller('MainController', ['$scope', '$http', '$ionicLo
       $scope.show($ionicLoading);
       $http.get("https://api.fixer.io/latest?base=USD").then(function (response) {
         var data = response.data;
-        var allRates = data.rates;
-
-        var updatedOneUSDTo = {};
-        for (var key in oneUSDTo) {
-          var iRate = allRates[key];
-          if (iRate) {
-            updatedOneUSDTo[key] = iRate;
-          } else if (key === "USD") {
-            updatedOneUSDTo["USD"] = 1;
-          } else {
-            return;
-          }
-        }
-
-        oneUSDTo = updatedOneUSDTo;
+        oneUSDTo = data.rates;
+        oneUSDTo["USD"] = 1;
 
         var parseDateToUTC = function (dateStr) { //given "yyyy-mm-dd"
           var parts = dateStr.split("-");
@@ -106,5 +254,40 @@ angular.module('app').controller('MainController', ['$scope', '$http', '$ionicLo
   };
 
   $scope.getExchangeRates();
+  createCurrenciesModel();
+  $scope.settingsMenuOpen = false;
+  document.getElementById("main-content-styles-without-settings").addEventListener("click", function () {
+    if (getWindowWidth() < 767 && $scope.settingsMenuOpen) {
+      $scope.toggleSettingsMenu();
+    }
+  });
 
+
+
+
+  /* Settings side menu functions */
+  /* Set the width of the side navigation to 250px and the left margin of the page content to 250px */
+  $scope.toggleSettingsMenu = function() {
+    if ($scope.settingsMenuOpen) {
+      document.getElementById("settings-side-menu").style.width = "0";
+      document.getElementById("main-content-styles").style.marginRight = "0";
+      document.getElementById("settings-icon").classList.remove("menu-open");
+      $scope.settingsMenuOpen = false;
+    } else {
+      if (getWindowWidth() > 767) {
+        document.getElementById("settings-side-menu").style.width = "330px";
+        document.getElementById("main-content-styles").style.marginRight = "330px";
+      } else {
+        document.getElementById("settings-side-menu").style.width = "300px";
+      }
+      document.getElementById("settings-icon").classList.add("menu-open");
+      $scope.settingsMenuOpen = true;
+    }
+  };
+
+  function getWindowWidth() {
+    return window.innerWidth
+      || document.documentElement.clientWidth
+      || document.body.clientWidth;
+  }
 }]);

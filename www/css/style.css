@@ -3,8 +3,38 @@
   background-color: #f6f6f6;
 }
 
-#main-controller-styles {
-  padding: 90px 20px;
+#main-content-styles {
+  min-height: calc(100vh - 1px);
+}
+
+#main-content-styles-without-settings {
+  min-height: 100vh;
+  padding: 75px 15px 0px 15px;
+}
+
+#settings-icon {
+  text-align: right;
+  font-size: 60px;
+  margin-right: 15px;
+  margin-bottom: 5px;
+  padding: 10px;
+  color: #444444;
+  display: inline-block;
+  transition: right .3s;
+  right: 10px;
+  position: absolute;
+}
+
+#settings-icon.menu-open {
+  right: 330px;
+}
+
+#settings-icon.menu-open {
+  color: #BBBBBB !important;
+}
+
+#settings-icon span {
+  cursor: pointer;
 }
 
 .currency-input {
