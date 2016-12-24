@@ -136,42 +136,11 @@ angular.module('app').controller('MainController', ['$scope', '$http', '$ionicLo
    * as it just means copying and pasting the results of the API call.
    * */
   var oneUSDTo = {
-    "AUD":1.3525,
-    "BGN":1.8401,
-    "BRL":3.3916,
-    "CAD":1.3515,
-    "CHF":1.0077,
-    "CNY":6.8827,
-    "CZK":25.435,
-    "DKK":6.9996,
-    "GBP":0.81116,
-    "HKD":7.7571,
-    "HRK":7.0863,
-    "HUF":291.18,
-    "IDR":13428.0,
-    "ILS":3.8727,
-    "INR":67.943,
-    "JPY":110.03,
-    "KRW":1176.2,
-    "MXN":20.413,
-    "MYR":4.404,
-    "NOK":8.5651,
-    "NZD":1.4181,
-    "PHP":49.569,
-    "PLN":4.18,
-    "RON":4.2478,
-    "RUB":64.723,
-    "SEK":9.2429,
-    "SGD":1.4213,
-    "THB":35.51,
-    "TRY":3.368,
-    "USD":1,
-    "ZAR":14.375,
-    "EUR":0.94082
+    "AUD":1.3944,"BGN":1.8723,"BRL":3.2688,"CAD":1.3514,"CHF":1.0254,"CNY":6.9457,"CZK":25.869,"DKK":7.1168,"GBP":0.81637,"HKD":7.7608,"HRK":7.2162,"HUF":296.46,"IDR":13435.0,"ILS":3.8244,"INR":67.803,"JPY":117.37,"KRW":1203.9,"MXN":20.692,"MYR":4.474,"NOK":8.7046,"NZD":1.4546,"PHP":49.782,"PLN":4.2215,"RON":4.3383,"RUB":61.276,"SEK":9.2342,"SGD":1.4469,"THB":35.96,"TRY":3.5108,"ZAR":14.01,"EUR":0.9573,"USD":1
   };
 
   // month is month-1. yyyy, mm, day, hours, minutes, seconds, milliseconds
-  $scope.exchangeRateLastUpdated = new Date(Date.UTC (2016, 10, 18, 15, 0, 0));
+  $scope.exchangeRateLastUpdated = new Date(Date.UTC (2016, 11, 23, 15, 0, 0));
 
   function createCurrenciesModel() {
     $scope.currenciesModel = {};
