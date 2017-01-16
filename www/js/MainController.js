@@ -22,7 +22,7 @@ angular.module('app').controller('MainController', ['$scope', '$http', '$ionicLo
       "fullname": "Swiss Franc"
     },
     "CNY":{
-      "show": false,
+      "show": true,
       "fullname": "Chinese Yuan"
     },
     "CZK":{
@@ -38,7 +38,7 @@ angular.module('app').controller('MainController', ['$scope', '$http', '$ionicLo
       "fullname": "Euro"
     },
     "GBP":{
-      "show": false,
+      "show": true,
       "fullname": "British Pound"
     },
     "HKD":{
@@ -70,7 +70,7 @@ angular.module('app').controller('MainController', ['$scope', '$http', '$ionicLo
       "fullname": "Japanese Yen"
     },
     "KRW":{
-      "show": true,
+      "show": false,
       "fullname": "South Korean Won"
     },
     "MXN":{
@@ -131,16 +131,17 @@ angular.module('app').controller('MainController', ['$scope', '$http', '$ionicLo
     }
   };
 
-  /* *** if update oneUSDTo, please append "USD":1. Also update $scope.exchangeRateLastUpdated. ***
-   * oneUSDTo is purposely left out of $scope.currencies object because it makes updating oneUSDTo easier,
+  /* *** if updating hard coded exchange rates
+   *  1. update $scope.exchangeRateLastUpdated
+   * Note: oneUSDTo is purposely left out of $scope.currencies object because it makes updating oneUSDTo easier,
    * as it just means copying and pasting the results of the API call.
    * */
   var oneUSDTo = {
-    "AUD":1.3944,"BGN":1.8723,"BRL":3.2688,"CAD":1.3514,"CHF":1.0254,"CNY":6.9457,"CZK":25.869,"DKK":7.1168,"GBP":0.81637,"HKD":7.7608,"HRK":7.2162,"HUF":296.46,"IDR":13435.0,"ILS":3.8244,"INR":67.803,"JPY":117.37,"KRW":1203.9,"MXN":20.692,"MYR":4.474,"NOK":8.7046,"NZD":1.4546,"PHP":49.782,"PLN":4.2215,"RON":4.3383,"RUB":61.276,"SEK":9.2342,"SGD":1.4469,"THB":35.96,"TRY":3.5108,"ZAR":14.01,"EUR":0.9573,"USD":1
+    "AUD":1.3343,"BGN":1.8345,"BRL":3.1983,"CAD":1.3141,"CHF":1.0063,"CNY":6.9003,"CZK":25.346,"DKK":6.974,"GBP":0.8212,"HKD":7.7546,"HRK":7.0603,"HUF":288.43,"IDR":13332.0,"ILS":3.8149,"INR":68.162,"JPY":114.35,"KRW":1173.8,"MXN":21.655,"MYR":4.462,"NOK":8.4964,"NZD":1.4025,"PHP":49.678,"PLN":4.1027,"RON":4.2137,"RUB":59.345,"SEK":8.8993,"SGD":1.4263,"THB":35.4,"TRY":3.7883,"ZAR":13.515,"EUR":0.938
   };
 
   // month is month-1. yyyy, mm, day, hours, minutes, seconds, milliseconds
-  $scope.exchangeRateLastUpdated = new Date(Date.UTC (2016, 11, 23, 15, 0, 0));
+  $scope.exchangeRateLastUpdated = new Date(Date.UTC (2017, 0, 13, 15, 0, 0));
 
   function createCurrenciesModel() {
     $scope.currenciesModel = {};
@@ -219,6 +220,8 @@ angular.module('app').controller('MainController', ['$scope', '$http', '$ionicLo
         // On both cases hide the loading
         $scope.hide($ionicLoading);
       });
+    } else {
+      oneUSDTo["USD"] = 1; //add USD to hardcoded model
     }
   };
 
