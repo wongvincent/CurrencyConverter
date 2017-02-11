@@ -1,4 +1,4 @@
-angular.module('app').factory('localStorageService', ['$http', function ($http) {
+angular.module('app').factory('localStorageService', function () {
     return {
         set: function (key, value) {
             return localStorage.setItem(key, JSON.stringify(value));
@@ -10,4 +10,4 @@ angular.module('app').factory('localStorageService', ['$http', function ($http) 
             return localStorage.removeItem(key);
         },
     };
-}])
+});
