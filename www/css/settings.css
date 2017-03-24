@@ -1,21 +1,21 @@
 /* The side navigation menu */
-.right-side-menu {
-    height: 100%; /* 100% Full-height */
-    width: 0; /* 0 width - change this with JavaScript */
-    position: fixed; /* Stay in place */
-    z-index: 1; /* Stay on top */
+#settings-side-menu {
+    height: 100%;
+    width: 0;
+    position: fixed;
+    z-index: 1;
     top: 0;
     right: 0;
-    overflow-x: hidden; /* Disable horizontal scroll */
-    padding-top: 40px; /* Place content 60px from the top */
-    transition: 0.3s; /* 0.5 second transition effect to slide in the sidenav */
+    overflow-x: hidden;
+    padding-top: 40px;
+    transition: 0.3s; /* 0.3 second transition effect to slide in the sidenav */
     border-left: 3px solid black;
     background-color: white;
     padding-bottom: 25px;
 }
 
 /* The navigation menu links */
-.right-side-menu a {
+#settings-side-menu a {
     padding: 8px 8px 8px 32px;
     text-decoration: none;
     font-size: 25px;
@@ -25,12 +25,12 @@
 }
 
 /* When you mouse over the navigation links, change their color */
-.right-side-menu a:hover, .offcanvas a:focus {
+#settings-side-menu a:hover, .offcanvas a:focus {
     color: #f1f1f1;
 }
 
 /* Position and style the close button (top right corner) */
-.right-side-menu .closebtn {
+#settings-side-menu .closebtn {
     position: absolute;
     top: 0;
     right: 25px;
@@ -40,7 +40,7 @@
 
 /* Style page content - use this if you want to push the page content to the left when you open the side navigation */
 #main-content-styles {
-    transition: margin-right .3s;
+    transition: width 0.3s;
 }
 
 #settings-side-menu #title {

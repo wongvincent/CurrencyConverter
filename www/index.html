@@ -19,34 +19,38 @@
     <script src="js/LocalStorageService.min.js"></script>
 </head>
 <body ng-app="app">
-<ion-content ng-controller="MainController" id="main-controller-styles" class="content">
-    <div id="settings-side-menu" class="right-side-menu">
+<div ng-controller="MainController" id="main-controller-styles" class="content">
+    <div id="settings-side-menu">
         <div id="title">Currencies to show</div>
         <label ng-repeat="(currency, value) in currencies" class="row">
             <div class="fullname">{{::value.fullname}}</div>
             <input class="checkbox" type="checkbox" ng-model="value.show" ng-click="updateCurrenciesToShow()">
         </label>
-
     </div>
+    <div id="settings-icon"><span class="ion-android-settings" ng-click="toggleSettingsMenu()"></span></div>
     <div id="main-content-styles">
-        <div id="settings-icon"><span class="ion-android-settings" ng-click="toggleSettingsMenu()"></span></div>
-        <div id="main-content-styles-without-settings">
-            <div ng-repeat="(currency, value) in currencies" ng-show="value.show">
-                <input type="number" ng-model="currenciesModel[currency]" ng-change="valueChange(currency)"
-                       class="currency-input">
-                <span class="currency-type">{{::currency}}</span>
-            </div>
-            <button ng-click="resetInputs()" id="reset-inputs">Reset</button>
-            <div id="lastUpdated">Rates as of: {{exchangeRateLastUpdated | date:'MMM d, y HH:mm Z'}}</div>
+        <div ng-repeat="(currency, value) in currencies" ng-show="value.show">
+            <input type="number" ng-model="currenciesModel[currency]" ng-change="valueChange(currency)"
+                   class="currency-input" min="0">
+            <span class="currency-type">{{::currency}}</span>
         </div>
+        <button ng-click="resetInputs()" id="reset-inputs">Reset</button>
+        <div id="lastUpdated">Rates as of: {{exchangeRateLastUpdated | date:'MMM d, y HH:mm Z'}}</div>
     </div>
-</ion-content>
+</div>
 
 <script>
-    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+    (function (i, s, o, g, r, a, m) {
+        i['GoogleAnalyticsObject'] = r;
+        i[r] = i[r] || function () {
+                (i[r].q = i[r].q || []).push(arguments)
+            }, i[r].l = 1 * new Date();
+        a = s.createElement(o),
+            m = s.getElementsByTagName(o)[0];
+        a.async = 1;
+        a.src = g;
+        m.parentNode.insertBefore(a, m)
+    })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
 
     ga('create', 'UA-70991808-1', 'auto');
     ga('send', 'pageview');

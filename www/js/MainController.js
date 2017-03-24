@@ -139,41 +139,41 @@ angular.module('app')
              * as it just means copying and pasting the results of the API call.
              * */
             var oneUSDTo = {
-                "AUD": 1.3343,
-                "BGN": 1.8345,
-                "BRL": 3.1983,
-                "CAD": 1.3141,
-                "CHF": 1.0063,
-                "CNY": 6.9003,
-                "CZK": 25.346,
-                "DKK": 6.974,
-                "GBP": 0.8212,
-                "HKD": 7.7546,
-                "HRK": 7.0603,
-                "HUF": 288.43,
-                "IDR": 13332.0,
-                "ILS": 3.8149,
-                "INR": 68.162,
-                "JPY": 114.35,
-                "KRW": 1173.8,
-                "MXN": 21.655,
-                "MYR": 4.462,
-                "NOK": 8.4964,
-                "NZD": 1.4025,
-                "PHP": 49.678,
-                "PLN": 4.1027,
-                "RON": 4.2137,
-                "RUB": 59.345,
-                "SEK": 8.8993,
-                "SGD": 1.4263,
-                "THB": 35.4,
-                "TRY": 3.7883,
-                "ZAR": 13.515,
-                "EUR": 0.938
+                "AUD": 1.3102,
+                "BGN": 1.8133,
+                "BRL": 3.1159,
+                "CAD": 1.3339,
+                "CHF": 0.99203,
+                "CNY": 6.8856,
+                "CZK": 25.052,
+                "DKK": 6.8938,
+                "GBP": 0.79986,
+                "HKD": 7.7675,
+                "HRK": 6.8772,
+                "HUF": 286.69,
+                "IDR": 13317.0,
+                "ILS": 3.6457,
+                "INR": 65.464,
+                "JPY": 110.66,
+                "KRW": 1119.4,
+                "MXN": 19.095,
+                "MYR": 4.429,
+                "NOK": 8.4812,
+                "NZD": 1.4188,
+                "PHP": 50.351,
+                "PLN": 3.9574,
+                "RON": 4.2235,
+                "RUB": 57.667,
+                "SEK": 8.8165,
+                "SGD": 1.3987,
+                "THB": 34.6,
+                "TRY": 3.6193,
+                "ZAR": 12.51,
+                "EUR": 0.92713
             };
 
             // month is month-1. yyyy, mm, day, hours, minutes, seconds, milliseconds
-            $scope.exchangeRateLastUpdated = new Date(Date.UTC(2017, 0, 13, 15, 0, 0));
+            $scope.exchangeRateLastUpdated = new Date(Date.UTC(2017, 2, 23, 15, 0, 0));
 
             function createCurrenciesModel() {
                 $scope.currenciesModel = {};
@@ -274,25 +274,26 @@ angular.module('app')
             setCurrenciesToShow();
             createCurrenciesModel();
             $scope.settingsMenuOpen = false;
-            document.getElementById("main-content-styles-without-settings").addEventListener("click", function () {
+
+            // When settings menu is open on a mobile device, and they tap main-content, it should close the settings menu
+            document.getElementById("main-content-styles").addEventListener("click", function() {
                 if (getWindowWidth() < 767 && $scope.settingsMenuOpen) {
                     $scope.toggleSettingsMenu();
                 }
             });
-
 
             /* Settings side menu functions */
             /* Set the width of the side navigation to 250px and the left margin of the page content to 250px */
             $scope.toggleSettingsMenu = function () {
                 if ($scope.settingsMenuOpen) {
                     document.getElementById("settings-side-menu").style.width = "0";
-                    document.getElementById("main-content-styles").style.marginRight = "0";
+                    document.getElementById("main-content-styles").style.width = "100%";
                     document.getElementById("settings-icon").classList.remove("menu-open");
                     $scope.settingsMenuOpen = false;
                 } else {
                     if (getWindowWidth() > 767) {
                         document.getElementById("settings-side-menu").style.width = "330px";
-                        document.getElementById("main-content-styles").style.marginRight = "330px";
+                        document.getElementById("main-content-styles").style.width = "calc(100% - 330px)";
                     } else {
                         document.getElementById("settings-side-menu").style.width = "300px";
                     }
