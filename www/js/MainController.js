@@ -182,7 +182,10 @@ angular.module('app')
                 }
             }
 
-            $scope.valueChange = function (currency) {
+            $scope.valueChange = function (value, currency) {
+                if ((value * 100) % 1 !== 0) {
+                    $scope.currenciesModel[currency] = ((value * 1000).toFixed(0) - (((value * 1000).toFixed(0)) % 10)) / 1000;
+                }
                 updateAll(currency);
             };
 
