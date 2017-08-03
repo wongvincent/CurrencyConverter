@@ -139,41 +139,41 @@ angular.module('app')
              * as it just means copying and pasting the results of the API call.
              * */
             var oneUSDTo = {
-                "AUD": 1.3102,
-                "BGN": 1.8133,
-                "BRL": 3.1159,
-                "CAD": 1.3339,
-                "CHF": 0.99203,
-                "CNY": 6.8856,
-                "CZK": 25.052,
-                "DKK": 6.8938,
-                "GBP": 0.79986,
-                "HKD": 7.7675,
-                "HRK": 6.8772,
-                "HUF": 286.69,
+                "AUD": 1.2551,
+                "BGN": 1.6534,
+                "BRL": 3.1275,
+                "CAD": 1.2546,
+                "CHF": 0.96872,
+                "CNY": 6.7258,
+                "CZK": 22.088,
+                "DKK": 6.2883,
+                "GBP": 0.75598,
+                "HKD": 7.8165,
+                "HRK": 6.2611,
+                "HUF": 256.88,
                 "IDR": 13317.0,
-                "ILS": 3.6457,
-                "INR": 65.464,
-                "JPY": 110.66,
-                "KRW": 1119.4,
-                "MXN": 19.095,
-                "MYR": 4.429,
-                "NOK": 8.4812,
-                "NZD": 1.4188,
-                "PHP": 50.351,
-                "PLN": 3.9574,
-                "RON": 4.2235,
-                "RUB": 57.667,
-                "SEK": 8.8165,
-                "SGD": 1.3987,
-                "THB": 34.6,
-                "TRY": 3.6193,
-                "ZAR": 12.51,
-                "EUR": 0.92713
+                "ILS": 3.5788,
+                "INR": 63.68,
+                "JPY": 110.73,
+                "KRW": 1123.8,
+                "MXN": 17.911,
+                "MYR": 4.2855,
+                "NOK": 7.9047,
+                "NZD": 1.3464,
+                "PHP": 50.318,
+                "PLN": 3.5962,
+                "RON": 3.8543,
+                "RUB": 60.703,
+                "SEK": 8.1087,
+                "SGD": 1.358,
+                "THB": 33.27,
+                "TRY": 3.5325,
+                "ZAR": 13.281,
+                "EUR": 0.84538
             };
 
             // month is month-1. yyyy, mm, day, hours, minutes, seconds, milliseconds
-            $scope.exchangeRateLastUpdated = new Date(Date.UTC(2017, 2, 23, 15, 0, 0));
+            $scope.exchangeRateLastUpdated = new Date(Date.UTC(2017, 7, 2, 15, 0, 0));
 
             function createCurrenciesModel() {
                 $scope.currenciesModel = {};
@@ -218,7 +218,6 @@ angular.module('app')
 
 
             /* Loading spinner */
-
             $scope.show = function () {
                 $ionicLoading.show({
                     template: '<ion-spinner icon="dots" class="spinner-light"></ion-spinner>'
@@ -236,7 +235,7 @@ angular.module('app')
                 $scope.show($ionicLoading);
 
                 // the new Date means a new query string is always created, which prevents caching of the exchange rates
-                var sURL = "https://api.fixer.io/latest?base=USD&" + new Date().getTime();
+                var sURL = "https://api.fixer.io/latest?base=USD&" + Date.now();
 
                 $http.get(sURL, {timeout: 5000}).then(function (response) {
                     var data = response.data;
@@ -279,7 +278,7 @@ angular.module('app')
             $scope.settingsMenuOpen = false;
 
             // When settings menu is open on a mobile device, and they tap main-content, it should close the settings menu
-            document.getElementById("main-content-styles").addEventListener("click", function() {
+            document.getElementById("main-content-styles").addEventListener("click", function () {
                 if (getWindowWidth() < 767 && $scope.settingsMenuOpen) {
                     $scope.toggleSettingsMenu();
                 }
