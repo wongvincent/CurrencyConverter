@@ -7,10 +7,6 @@ angular.module('app')
                     "show": false,
                     "fullname": "Australian Dollar"
                 },
-                "BGN": {
-                    "show": false,
-                    "fullname": "Bulgarian Lev"
-                },
                 "BRL": {
                     "show": false,
                     "fullname": "Brazilian Real"
@@ -137,49 +133,6 @@ angular.module('app')
                 }
             };
 
-            /* *** if updating hard coded exchange rates
-             *  1. update $scope.exchangeRateLastUpdated
-             * Note: oneUSDTo is purposely left out of $scope.currencies object because it makes updating oneUSDTo easier,
-             * as it just means copying and pasting the results of the API call.
-             * */
-            var oneUSDTo = {
-                "AUD":1.2714,
-                "BGN":1.5898,
-                "BRL":3.2586,
-                "CAD":1.2829,
-                "CHF":0.94952,
-                "CNY":6.3312,
-                "CZK":20.686,
-                "DKK":6.0556,
-                "EUR":0.81288,
-                "GBP":0.72013,
-                "HKD":7.8399,
-                "HRK":6.0519,
-                "HUF":253.53,
-                "IDR":13768.0,
-                "ILS":3.4443,
-                "INR":65.012,
-                "ISK":100.07,
-                "JPY":106.52,
-                "KRW":1066.7,
-                "MXN":18.682,
-                "MYR":3.9045,
-                "NOK":7.7748,
-                "NZD":1.37,
-                "PHP":52.081,
-                "PLN":3.4151,
-                "RON":3.7895,
-                "RUB":56.94,
-                "SEK":8.2556,
-                "SGD":1.3146,
-                "THB":31.33,
-                "TRY":3.8377,
-                "ZAR":11.848
-            };
-
-            // month is month-1. yyyy, mm, day, hours, minutes, seconds, milliseconds
-            $scope.exchangeRateLastUpdated = new Date(Date.UTC(2018, 2, 12, 15, 0, 0));
-
             function createCurrenciesModel() {
                 $scope.currenciesModel = {};
                 for (var key in $scope.currencies) {
@@ -202,8 +155,8 @@ angular.module('app')
             };
 
             function convertCurrency(fromCurrency, toCurrency, value) {
-                var usdValue = value / oneUSDTo[fromCurrency];
-                return usdValue * oneUSDTo[toCurrency];
+                var baseValue = value / $scope.exchangeRates[fromCurrency];
+                return baseValue * $scope.exchangeRates[toCurrency];
             }
 
             $scope.resetInputs = function () {
@@ -234,51 +187,74 @@ angular.module('app')
             };
 
 
-            /* Load exchange rates (api), otherwise use hardcoded rates */
-            $scope.getExchangeRates = function () {
-                // Should convert this to a service
+            /***
+             * Load from local storage if < 24 hours old, otherwise call exchange rates (api).
+             * If fail, use hardcoded rates
+             */
+            var getExchangeRates = function () {
                 $scope.show($ionicLoading);
 
-                // the new Date means a new query string is always created, which prevents caching of the exchange rates
-                var sURL = "https://api.fixer.io/latest?base=USD&" + Date.now();
+                var data = localStorageService.get('exchangeRates');
+                if (data) {
+                    var timestamp = data.timestamp * 1000;
+                    var millisecondsInADay = 24 * 60 * 60 * 1000;
+                    if (Date.now() - timestamp < millisecondsInADay) {
+                        $scope.base = data.base;
+                        $scope.exchangeRates = data.rates;
+                        $scope.exchangeRateLastUpdated = new Date(timestamp);
+                        $scope.hide($ionicLoading);
+                        return;
+                    }
+                }
+
+                var sURL = "https://data.fixer.io/api/latest?access_key=" + "5b80344db7aec5d65deb6fedd17ca62e";
 
                 $http.get(sURL, {timeout: 5000}).then(function (response) {
                     var data = response.data;
-                    oneUSDTo = data.rates;
+                    data.rates[data.base] = 1;
+                    localStorageService.set('exchangeRates', data);
 
-                    var parseDateToUTC = function (dateStr) { //given "yyyy-mm-dd"
-                        var parts = dateStr.split("-");
-                        return new Date(Date.UTC(parts[0], parts[1] - 1, parts[2], 15));
-                    };
-
-                    //API updates exchange rates at 4pm CET, which is 3pm UTC
-                    $scope.exchangeRateLastUpdated = parseDateToUTC(data.date);
-                }, function (err) {
-                    $ionicPopup.alert({
-                        title: 'Error!',
-                        template: 'Failed to get newest rates. Using rates from ' + $scope.exchangeRateLastUpdated
-                    });
-                }).finally(function ($ionicLoading) {
-                    // On both cases hide the loading
-                    oneUSDTo["USD"] = 1; //add USD to exchange rates (regardless if it's online/offline)
+                    $scope.base = data.base;
+                    $scope.exchangeRates = data.rates;
+                    $scope.exchangeRateLastUpdated = new Date(data.timestamp * 1000);
                     $scope.hide($ionicLoading);
-                });
+                }, function (err) {
+                    $http.get('backupRates.json').then(function(json) {
+                        $scope.hide($ionicLoading);
 
+                        var data = json.data;
+                        data.rates[data.base] = 1;
+                        $scope.base = data.base;
+                        $scope.exchangeRates = data.rates;
+                        $scope.exchangeRateLastUpdated = new Date(data.timestamp * 1000);
+
+                        var year = $scope.exchangeRateLastUpdated.getFullYear();
+                        var month = $scope.exchangeRateLastUpdated.getMonth() + 1;
+                        if (month < 10) {
+                            month = '0' + month;
+                        }
+                        var day = $scope.exchangeRateLastUpdated.getDate();
+                        $ionicPopup.alert({
+                            title: 'Error',
+                            template: 'Failed to get newest rates. Using rates from ' + year + '-' + month + '-' + day + '.'
+                        });
+                    });
+                });
             };
 
-            var setCurrenciesToShow = function () {
-                var currenciesInStorage = localStorageService.get('currencies');
+            var getCurrenciesToShow = function () {
+                var currenciesInStorage = localStorageService.get('currenciesToShow');
                 if (currenciesInStorage) {
                     $scope.currencies = currenciesInStorage;
                 }
             };
 
             $scope.updateCurrenciesToShow = function () {
-                localStorageService.set('currencies', $scope.currencies);
+                localStorageService.set('currenciesToShow', $scope.currencies);
             };
 
-            $scope.getExchangeRates();
-            setCurrenciesToShow();
+            getExchangeRates();
+            getCurrenciesToShow();
             createCurrenciesModel();
             $scope.settingsMenuOpen = false;
 
