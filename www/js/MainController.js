@@ -123,6 +123,10 @@ angular.module('app')
                     "show": false,
                     "fullname": "Turkish Lira"
                 },
+                "TWD": {
+                    "show": false,
+                    "fullname": "New Taiwan Dollar"
+                },
                 "USD": {
                     "show": true,
                     "fullname": "US Dollar"
