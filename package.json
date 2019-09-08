@@ -1,7 +1,12 @@
 {
   "name": "currencyconverter",
-  "version": "1.1.1",
-  "description": "CurrencyConverter: An Ionic project",
+  "version": "1.0.0",
+  "description": "Fast and Easy Currency Converter",
+  "license": "GPL-3.0-or-later",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/wongvincent/CurrencyConverter.git"
+  },
   "dependencies": {
     "gulp": "^3.5.6",
     "gulp-sass": "^2.0.4",
