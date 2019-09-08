@@ -68,7 +68,7 @@ angular.module('app')
                     "fullname": "Icelandic Krona"
                 },
                 "JPY": {
-                    "show": true,
+                    "show": false,
                     "fullname": "Japanese Yen"
                 },
                 "KRW": {
@@ -76,7 +76,7 @@ angular.module('app')
                     "fullname": "South Korean Won"
                 },
                 "MXN": {
-                    "show": false,
+                    "show": true,
                     "fullname": "Mexican Peso"
                 },
                 "MYR": {
@@ -211,7 +211,7 @@ angular.module('app')
                     }
                 }
 
-                var sURL = "https://data.fixer.io/api/latest?access_key=" + "5b80344db7aec5d65deb6fedd17ca62e";
+                var sURL = "http://data.fixer.io/api/latest?access_key=" + "5b80344db7aec5d65deb6fedd17ca62e";
 
                 $http.get(sURL, {timeout: 5000}).then(function (response) {
                     var data = response.data;

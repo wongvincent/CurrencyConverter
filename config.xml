@@ -2,7 +2,7 @@
 <widget id="com.vincentw.currencyconverter" version="1.0.0" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
   <name>Currency Converter</name>
   <description>
-        Simple and Fast Currency Converter
+        Fast and Easy Currency Converter
     </description>
   <author email="hello@vincentwong.me" href="http://vincentwong.me/">
       Vincent Wong
@@ -13,6 +13,7 @@
   <preference name="UIWebViewBounce" value="false"/>
   <preference name="DisallowOverscroll" value="true"/>
   <preference name="SplashScreenDelay" value="0"/>
+  <preference name="android-targetSdkVersion" value="28"/>
   <preference name="android-minSdkVersion" value="21"/>
   <preference name="BackupWebStorage" value="none"/>
   <preference name="SplashScreen" value="none"/>
