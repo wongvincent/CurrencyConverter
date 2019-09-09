@@ -1,6 +1,6 @@
 angular.module('app')
-    .controller('MainController', ['$scope', '$http', '$ionicLoading', '$ionicPopup', 'localStorageService',
-        function ($scope, $http, $ionicLoading, $ionicPopup, localStorageService) {
+    .controller('MainController', ['$rootScope', '$scope', '$http', '$ionicLoading', '$ionicPopup', 'localStorageService',
+        function ($rootScope, $scope, $http, $ionicLoading, $ionicPopup, localStorageService) {
 
             $scope.currencies = {
                 "AUD": {
@@ -144,6 +144,10 @@ angular.module('app')
                 }
             }
 
+            $scope.$on('closeSettingsMenu', function() { 
+                $rootScope.toggleSettingsMenu();
+            });              
+
             $scope.valueChange = function (value, currency) {
                 if ((value * 100) % 1 !== 0) {
                     $scope.currenciesModel[currency] = ((value * 1000).toFixed(0) - (((value * 1000).toFixed(0)) % 10)) / 1000;
@@ -260,23 +264,23 @@ angular.module('app')
             getExchangeRates();
             getCurrenciesToShow();
             createCurrenciesModel();
-            $scope.settingsMenuOpen = false;
+            $rootScope.settingsMenuOpen = false;
 
             // When settings menu is open on a mobile device, and they tap main-content, it should close the settings menu
             document.getElementById("main-content-styles").addEventListener("click", function () {
-                if (getWindowWidth() < 767 && $scope.settingsMenuOpen) {
-                    $scope.toggleSettingsMenu();
+                if (getWindowWidth() < 767 && $rootScope.settingsMenuOpen) {
+                    $rootScope.toggleSettingsMenu();
                 }
             });
 
             /* Settings side menu functions */
             /* Set the width of the side navigation to 250px and the left margin of the page content to 250px */
-            $scope.toggleSettingsMenu = function () {
-                if ($scope.settingsMenuOpen) {
+            $rootScope.toggleSettingsMenu = function () {
+                if ($rootScope.settingsMenuOpen) {
                     document.getElementById("settings-side-menu").style.width = "0";
                     document.getElementById("main-content-styles").style.width = "100%";
                     document.getElementById("settings-icon").classList.remove("menu-open");
-                    $scope.settingsMenuOpen = false;
+                    $rootScope.settingsMenuOpen = false;
                 } else {
                     if (getWindowWidth() > 767) {
                         document.getElementById("settings-side-menu").style.width = "330px";
@@ -285,7 +289,7 @@ angular.module('app')
                         document.getElementById("settings-side-menu").style.width = "300px";
                     }
                     document.getElementById("settings-icon").classList.add("menu-open");
-                    $scope.settingsMenuOpen = true;
+                    $rootScope.settingsMenuOpen = true;
                 }
             };
 

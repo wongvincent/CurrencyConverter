@@ -17,4 +17,26 @@ angular.module('app', ['ionic'])
                 StatusBar.styleDefault();
             }
         });
+
+        $ionicPlatform.registerBackButtonAction(function(e) {
+            if ($rootscope.settingsMenuOpen) {
+                $rootScope.$broadcast('closeSettingsMenu');
+                e.preventDefault();
+                return false;
+            }
+            /*
+                var exitAppPopup = $ionicPopup.confirm({
+                template: 'Exit Currency Converter?',
+                cancelText: 'CANCEL',
+                cancelType: 'button-light',
+                okText: 'EXIT',
+                okType: 'button-light',
+                });
+                exitAppPopup.then(function(res) {
+                if (res) {
+                    ionic.Platform.exitApp();
+                }
+                });
+            */
+        }, 100);
     }]);
