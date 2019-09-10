@@ -1,7 +1,7 @@
 // Ionic Starter App
 angular.module('app', ['ionic'])
 
-    .run(['$ionicPlatform' ,function ($ionicPlatform) {
+    .run(['$rootScope', '$ionicPlatform', function ($rootScope, $ionicPlatform) {
         $ionicPlatform.ready(function () {
             if (window.cordova && window.cordova.plugins.Keyboard) {
                 // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
@@ -19,10 +19,12 @@ angular.module('app', ['ionic'])
         });
 
         $ionicPlatform.registerBackButtonAction(function(e) {
-            if ($rootscope.settingsMenuOpen) {
+            if ($rootScope.settingsMenuOpen) {
                 $rootScope.$broadcast('closeSettingsMenu');
                 e.preventDefault();
                 return false;
+            } else {
+                ionic.Platform.exitApp();
             }
             /*
                 var exitAppPopup = $ionicPopup.confirm({

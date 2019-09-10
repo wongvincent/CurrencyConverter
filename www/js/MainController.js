@@ -145,7 +145,7 @@ angular.module('app')
             }
 
             $scope.$on('closeSettingsMenu', function() { 
-                $rootScope.toggleSettingsMenu();
+                $scope.closeSettingsMenu();
             });              
 
             $scope.valueChange = function (value, currency) {
@@ -269,27 +269,33 @@ angular.module('app')
             // When settings menu is open on a mobile device, and they tap main-content, it should close the settings menu
             document.getElementById("main-content-styles").addEventListener("click", function () {
                 if (getWindowWidth() < 767 && $rootScope.settingsMenuOpen) {
-                    $rootScope.toggleSettingsMenu();
+                    $scope.closeSettingsMenu();
                 }
             });
 
-            /* Settings side menu functions */
-            /* Set the width of the side navigation to 250px and the left margin of the page content to 250px */
-            $rootScope.toggleSettingsMenu = function () {
-                if ($rootScope.settingsMenuOpen) {
-                    document.getElementById("settings-side-menu").style.width = "0";
-                    document.getElementById("main-content-styles").style.width = "100%";
-                    document.getElementById("settings-icon").classList.remove("menu-open");
-                    $rootScope.settingsMenuOpen = false;
+            $scope.closeSettingsMenu = function() {
+                document.getElementById("settings-side-menu").style.width = "0";
+                document.getElementById("main-content-styles").style.width = "100%";
+                document.getElementById("settings-icon").classList.remove("menu-open");
+                $rootScope.settingsMenuOpen = false;
+            }
+
+            $scope.openSettingsMenu = function() {
+                if (getWindowWidth() > 767) {
+                    document.getElementById("settings-side-menu").style.width = "330px";
+                    document.getElementById("main-content-styles").style.width = "calc(100% - 330px)";
                 } else {
-                    if (getWindowWidth() > 767) {
-                        document.getElementById("settings-side-menu").style.width = "330px";
-                        document.getElementById("main-content-styles").style.width = "calc(100% - 330px)";
-                    } else {
-                        document.getElementById("settings-side-menu").style.width = "300px";
-                    }
-                    document.getElementById("settings-icon").classList.add("menu-open");
-                    $rootScope.settingsMenuOpen = true;
+                    document.getElementById("settings-side-menu").style.width = "300px";
+                }
+                document.getElementById("settings-icon").classList.add("menu-open");
+                $rootScope.settingsMenuOpen = true;
+            }
+            
+            $scope.toggleSettingsMenu = function () {
+                if ($rootScope.settingsMenuOpen) {
+                    $scope.closeSettingsMenu();
+                } else {
+                    $scope.openSettingsMenu();
                 }
             };
 
