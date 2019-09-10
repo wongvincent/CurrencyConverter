@@ -1,7 +1,7 @@
 // Ionic Starter App
 angular.module('app', ['ionic'])
 
-    .run(['$ionicPlatform' ,function ($ionicPlatform) {
+    .run(['$rootScope', '$ionicPlatform', function ($rootScope, $ionicPlatform) {
         $ionicPlatform.ready(function () {
             if (window.cordova && window.cordova.plugins.Keyboard) {
                 // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
@@ -17,4 +17,28 @@ angular.module('app', ['ionic'])
                 StatusBar.styleDefault();
             }
         });
+
+        $ionicPlatform.registerBackButtonAction(function(e) {
+            if ($rootScope.settingsMenuOpen) {
+                $rootScope.$broadcast('closeSettingsMenu');
+                e.preventDefault();
+                return false;
+            } else {
+                ionic.Platform.exitApp();
+            }
+            /*
+                var exitAppPopup = $ionicPopup.confirm({
+                template: 'Exit Currency Converter?',
+                cancelText: 'CANCEL',
+                cancelType: 'button-light',
+                okText: 'EXIT',
+                okType: 'button-light',
+                });
+                exitAppPopup.then(function(res) {
+                if (res) {
+                    ionic.Platform.exitApp();
+                }
+                });
+            */
+        }, 100);
     }]);
