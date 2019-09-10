@@ -252,8 +252,23 @@ angular.module('app')
 
             var getCurrenciesToShow = function () {
                 var currenciesInStorage = localStorageService.get('currenciesToShow');
-                if (currenciesInStorage) {
-                    $scope.currencies = currenciesInStorage;
+                if (currenciesInStorage && Object.keys(currenciesInStorage).length === Object.keys($scope.currencies).length) {
+                    const currenciesInStorageArray = Object.values(currenciesInStorage);
+                    let numberOfCurrenciesShown = 0;
+                    for (let i = 0; i < currenciesInStorageArray.length; i++) {
+                        if (currenciesInStorageArray[i].show) {
+                            numberOfCurrenciesShown++;
+                            if (numberOfCurrenciesShown > 1) {
+                                break;
+                            }
+                        }
+                    }
+
+                    if (numberOfCurrenciesShown > 1) {
+                        $scope.currencies = currenciesInStorage;
+                    } else {
+                        $scope.updateCurrenciesToShow();
+                    }
                 }
             };
 
