@@ -144,9 +144,9 @@ angular.module('app')
                 }
             }
 
-            $scope.$on('closeSettingsMenu', function() { 
+            $scope.$on('closeSettingsMenu', function() {
                 $scope.closeSettingsMenu();
-            });              
+            });
 
             $scope.valueChange = function (value, currency) {
                 if ((value * 100) % 1 !== 0) {
