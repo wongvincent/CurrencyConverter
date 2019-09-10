@@ -251,7 +251,7 @@ angular.module('app')
                 if (currenciesInStorage && Object.keys(currenciesInStorage).length === Object.keys($scope.currencies).length) {
                     const currenciesInStorageArray = Object.values(currenciesInStorage);
                     let numberOfCurrenciesShown = 0;
-                    for (let i = 0; i < currenciesInStorage.Array.length; i++) {
+                    for (let i = 0; i < currenciesInStorageArray.length; i++) {
                         if (currenciesInStorageArray[i].show) {
                             numberOfCurrenciesShown++;
                             if (numberOfCurrenciesShown > 1) {
