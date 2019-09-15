@@ -39,7 +39,7 @@
             <span class="currency-type">{{::currency}}</span>
         </div>
         <button ng-click="resetInputs()" id="reset-inputs">Reset</button>
-        <div id="lastUpdated">Rates as of: {{exchangeRateLastUpdated | date:'MMM d, y HH:mm Z'}}</div>
+        <div id="lastUpdated">Rates as of {{exchangeRateLastUpdated | date:'MMM d, y, h:mm a Z'}}</div>
     </div>
 </div>
 

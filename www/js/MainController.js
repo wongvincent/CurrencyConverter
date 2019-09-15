@@ -197,58 +197,48 @@ angular.module('app')
 
             /***
              * Load from local storage if < 24 hours old, otherwise call exchange rates (api).
-             * If fail, use hardcoded rates
+             * If fail, use local storage. If doesn't exist, use hardcoded rates
              */
             var getExchangeRates = function () {
                 $scope.show($ionicLoading);
 
-                var data = localStorageService.get('exchangeRates');
-                if (data) {
-                    var timestamp = data.timestamp * 1000;
-                    var millisecondsInADay = 24 * 60 * 60 * 1000;
+                let localStorageData = localStorageService.get('exchangeRates');
+                if (localStorageData) {
+                    let timestamp = localStorageData.timestamp * 1000;
+                    let millisecondsInADay = 24 * 60 * 60 * 1000;
                     if (Date.now() - timestamp < millisecondsInADay) {
-                        $scope.base = data.base;
-                        $scope.exchangeRates = data.rates;
-                        $scope.exchangeRateLastUpdated = new Date(timestamp);
+                        setExchangeRateVariables(localStorageData);
                         $scope.hide($ionicLoading);
                         return;
                     }
                 }
 
-                var sURL = "http://data.fixer.io/api/latest?access_key=" + "5b80344db7aec5d65deb6fedd17ca62e";
-
+                let sURL = "http://data.fixer.io/api/latest?access_key=" + "5b80344db7aec5d65deb6fedd17ca62e";
                 $http.get(sURL, {timeout: 5000}).then(function (response) {
-                    var data = response.data;
-                    data.rates[data.base] = 1;
+                    let data = response.data;
                     localStorageService.set('exchangeRates', data);
-
-                    $scope.base = data.base;
-                    $scope.exchangeRates = data.rates;
-                    $scope.exchangeRateLastUpdated = new Date(data.timestamp * 1000);
+                    setExchangeRateVariables(data);
                     $scope.hide($ionicLoading);
                 }, function (err) {
                     $http.get('backupRates.json').then(function(json) {
+                        let backupData = json.data;
+                        let data = localStorageData && localStorageData.timestamp > backupData.timestamp ? localStorageData : backupData;
+                        setExchangeRateVariables(data);
                         $scope.hide($ionicLoading);
 
-                        var data = json.data;
-                        data.rates[data.base] = 1;
-                        $scope.base = data.base;
-                        $scope.exchangeRates = data.rates;
-                        $scope.exchangeRateLastUpdated = new Date(data.timestamp * 1000);
-
-                        var year = $scope.exchangeRateLastUpdated.getFullYear();
-                        var month = $scope.exchangeRateLastUpdated.getMonth() + 1;
-                        if (month < 10) {
-                            month = '0' + month;
-                        }
-                        var day = $scope.exchangeRateLastUpdated.getDate();
                         $ionicPopup.alert({
                             title: 'Error',
-                            template: 'Failed to get newest rates. Using rates from ' + year + '-' + month + '-' + day + '.'
+                            template: 'Failed to get newest rates. Using rates from ' + $scope.exchangeRateLastUpdated.toString()
                         });
                     });
                 });
             };
+
+            var setExchangeRateVariables = function(data) {
+                $scope.base = data.base;
+                $scope.exchangeRates = data.rates;
+                $scope.exchangeRateLastUpdated = new Date(data.timestamp * 1000);
+            }
 
             var getCurrenciesToShow = function () {
                 var currenciesInStorage = localStorageService.get('currenciesToShow');
