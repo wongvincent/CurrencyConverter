@@ -34,7 +34,7 @@ html, body {
   font-size: 43px !important;
   display: inline-block !important;
   width: 100%;
-  max-width: calc(100% - 110px);
+  max-width: calc(100% - 125px);
   border: 1px #ccc solid !important;
   margin: 5px 2px 5px 0;
   height: auto !important;
