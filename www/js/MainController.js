@@ -1,6 +1,6 @@
 angular.module('app')
-    .controller('MainController', ['$scope', '$http', '$ionicLoading', '$ionicPopup', 'localStorageService',
-        function ($scope, $http, $ionicLoading, $ionicPopup, localStorageService) {
+    .controller('MainController', ['$rootScope', '$scope', '$http', '$ionicLoading', '$ionicPopup', 'localStorageService',
+        function ($rootScope, $scope, $http, $ionicLoading, $ionicPopup, localStorageService) {
 
             $scope.currencies = {
                 "AUD": {
@@ -144,6 +144,10 @@ angular.module('app')
                 }
             }
 
+            $scope.$on('closeSettingsMenu', function() {
+                $scope.closeSettingsMenu();
+            });
+
             $scope.valueChange = function (value, currency) {
                 if ((value * 100) % 1 !== 0) {
                     $scope.currenciesModel[currency] = ((value * 1000).toFixed(0) - (((value * 1000).toFixed(0)) % 10)) / 1000;
@@ -193,63 +197,68 @@ angular.module('app')
 
             /***
              * Load from local storage if < 24 hours old, otherwise call exchange rates (api).
-             * If fail, use hardcoded rates
+             * If fail, use local storage. If doesn't exist, use hardcoded rates
              */
             var getExchangeRates = function () {
                 $scope.show($ionicLoading);
 
-                var data = localStorageService.get('exchangeRates');
-                if (data) {
-                    var timestamp = data.timestamp * 1000;
-                    var millisecondsInADay = 24 * 60 * 60 * 1000;
+                let localStorageData = localStorageService.get('exchangeRates');
+                if (localStorageData) {
+                    let timestamp = localStorageData.timestamp * 1000;
+                    let millisecondsInADay = 24 * 60 * 60 * 1000;
                     if (Date.now() - timestamp < millisecondsInADay) {
-                        $scope.base = data.base;
-                        $scope.exchangeRates = data.rates;
-                        $scope.exchangeRateLastUpdated = new Date(timestamp);
+                        setExchangeRateVariables(localStorageData);
                         $scope.hide($ionicLoading);
                         return;
                     }
                 }
 
-                var sURL = "http://data.fixer.io/api/latest?access_key=" + "5b80344db7aec5d65deb6fedd17ca62e";
-
+                let sURL = "http://data.fixer.io/api/latest?access_key=" + "5b80344db7aec5d65deb6fedd17ca62e";
                 $http.get(sURL, {timeout: 5000}).then(function (response) {
-                    var data = response.data;
-                    data.rates[data.base] = 1;
+                    let data = response.data;
                     localStorageService.set('exchangeRates', data);
-
-                    $scope.base = data.base;
-                    $scope.exchangeRates = data.rates;
-                    $scope.exchangeRateLastUpdated = new Date(data.timestamp * 1000);
+                    setExchangeRateVariables(data);
                     $scope.hide($ionicLoading);
                 }, function (err) {
                     $http.get('backupRates.json').then(function(json) {
+                        let backupData = json.data;
+                        let data = localStorageData && localStorageData.timestamp > backupData.timestamp ? localStorageData : backupData;
+                        setExchangeRateVariables(data);
                         $scope.hide($ionicLoading);
 
-                        var data = json.data;
-                        data.rates[data.base] = 1;
-                        $scope.base = data.base;
-                        $scope.exchangeRates = data.rates;
-                        $scope.exchangeRateLastUpdated = new Date(data.timestamp * 1000);
-
-                        var year = $scope.exchangeRateLastUpdated.getFullYear();
-                        var month = $scope.exchangeRateLastUpdated.getMonth() + 1;
-                        if (month < 10) {
-                            month = '0' + month;
-                        }
-                        var day = $scope.exchangeRateLastUpdated.getDate();
                         $ionicPopup.alert({
                             title: 'Error',
-                            template: 'Failed to get newest rates. Using rates from ' + year + '-' + month + '-' + day + '.'
+                            template: 'Failed to get newest rates. Using rates from ' + $scope.exchangeRateLastUpdated.toString()
                         });
                     });
                 });
             };
 
+            var setExchangeRateVariables = function(data) {
+                $scope.base = data.base;
+                $scope.exchangeRates = data.rates;
+                $scope.exchangeRateLastUpdated = new Date(data.timestamp * 1000);
+            }
+
             var getCurrenciesToShow = function () {
                 var currenciesInStorage = localStorageService.get('currenciesToShow');
-                if (currenciesInStorage) {
-                    $scope.currencies = currenciesInStorage;
+                if (currenciesInStorage && Object.keys(currenciesInStorage).length === Object.keys($scope.currencies).length) {
+                    const currenciesInStorageArray = Object.values(currenciesInStorage);
+                    let numberOfCurrenciesShown = 0;
+                    for (let i = 0; i < currenciesInStorageArray.length; i++) {
+                        if (currenciesInStorageArray[i].show) {
+                            numberOfCurrenciesShown++;
+                            if (numberOfCurrenciesShown > 1) {
+                                break;
+                            }
+                        }
+                    }
+
+                    if (numberOfCurrenciesShown > 1) {
+                        $scope.currencies = currenciesInStorage;
+                    } else {
+                        $scope.updateCurrenciesToShow();
+                    }
                 }
             };
 
@@ -260,32 +269,38 @@ angular.module('app')
             getExchangeRates();
             getCurrenciesToShow();
             createCurrenciesModel();
-            $scope.settingsMenuOpen = false;
+            $rootScope.settingsMenuOpen = false;
 
             // When settings menu is open on a mobile device, and they tap main-content, it should close the settings menu
             document.getElementById("main-content-styles").addEventListener("click", function () {
-                if (getWindowWidth() < 767 && $scope.settingsMenuOpen) {
-                    $scope.toggleSettingsMenu();
+                if (getWindowWidth() < 767 && $rootScope.settingsMenuOpen) {
+                    $scope.closeSettingsMenu();
                 }
             });
 
-            /* Settings side menu functions */
-            /* Set the width of the side navigation to 250px and the left margin of the page content to 250px */
-            $scope.toggleSettingsMenu = function () {
-                if ($scope.settingsMenuOpen) {
-                    document.getElementById("settings-side-menu").style.width = "0";
-                    document.getElementById("main-content-styles").style.width = "100%";
-                    document.getElementById("settings-icon").classList.remove("menu-open");
-                    $scope.settingsMenuOpen = false;
+            $scope.closeSettingsMenu = function() {
+                document.getElementById("settings-side-menu").style.width = "0";
+                document.getElementById("main-content-styles").style.width = "100%";
+                document.getElementById("settings-icon").classList.remove("menu-open");
+                $rootScope.settingsMenuOpen = false;
+            }
+
+            $scope.openSettingsMenu = function() {
+                if (getWindowWidth() > 767) {
+                    document.getElementById("settings-side-menu").style.width = "330px";
+                    document.getElementById("main-content-styles").style.width = "calc(100% - 330px)";
                 } else {
-                    if (getWindowWidth() > 767) {
-                        document.getElementById("settings-side-menu").style.width = "330px";
-                        document.getElementById("main-content-styles").style.width = "calc(100% - 330px)";
-                    } else {
-                        document.getElementById("settings-side-menu").style.width = "300px";
-                    }
-                    document.getElementById("settings-icon").classList.add("menu-open");
-                    $scope.settingsMenuOpen = true;
+                    document.getElementById("settings-side-menu").style.width = "300px";
+                }
+                document.getElementById("settings-icon").classList.add("menu-open");
+                $rootScope.settingsMenuOpen = true;
+            }
+            
+            $scope.toggleSettingsMenu = function () {
+                if ($rootScope.settingsMenuOpen) {
+                    $scope.closeSettingsMenu();
+                } else {
+                    $scope.openSettingsMenu();
                 }
             };
 
