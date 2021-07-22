@@ -213,7 +213,18 @@ angular.module('app')
 
                 var sURL = "http://data.fixer.io/api/latest?access_key=" + "5b80344db7aec5d65deb6fedd17ca62e";
 
-                $http.get(sURL, {timeout: 5000}).then(function (response) {
+                // ghpages are served using https. the above API only supports http on the free version.
+                // this is why we need this cors proxy server
+                sURL = "https://cors.bridged.cc/" + sURL;
+
+                $http.get(sURL,
+                    {
+                        headers: {
+                            'X-Requested-With': 'XMLHttpRequest'
+                        },
+                        timeout: 5000
+                    }
+                ).then(function (response) {
                     var data = response.data;
                     data.rates[data.base] = 1;
                     localStorageService.set('exchangeRates', data);
@@ -248,8 +259,23 @@ angular.module('app')
 
             var getCurrenciesToShow = function () {
                 var currenciesInStorage = localStorageService.get('currenciesToShow');
-                if (currenciesInStorage) {
-                    $scope.currencies = currenciesInStorage;
+                if (currenciesInStorage && Object.keys(currenciesInStorage).length === Object.keys($scope.currencies).length) {
+                    const currenciesInStorageArray = Object.values(currenciesInStorage);
+                    let numberOfCurrenciesShown = 0;
+                    for (let i = 0; i < currenciesInStorage.Array.length; i++) {
+                        if (currenciesInStorageArray[i].show) {
+                            numberOfCurrenciesShown++;
+                            if (numberOfCurrenciesShown > 1) {
+                                break;
+                            }
+                        }
+                    }
+
+                    if (numberOfCurrenciesShown > 1) {
+                        $scope.currencies = currenciesInStorage;
+                    } else {
+                        $scope.updateCurrenciesToShow();
+                    }
                 }
             };
 
