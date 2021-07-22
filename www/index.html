@@ -6,6 +6,8 @@
     <title>Currency Converter</title>
 
     <script>
+        // Must force HTTP, as the fixer currency API free version only supports HTTP calls
+        // and we cannot call an HTTP API from an HTTPS site
         if (window.location.protocol === 'https:') {
             location.href = location.href.replace("https://", "http://");
         }
