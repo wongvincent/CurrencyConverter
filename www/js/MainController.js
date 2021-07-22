@@ -213,17 +213,10 @@ angular.module('app')
                     }
                 }
 
-                var sURL = "http://data.fixer.io/api/latest?access_key=" + "5b80344db7aec5d65deb6fedd17ca62e";
-
-                // ghpages are served using https. the above API only supports http on the free version.
-                // this is why we need this cors proxy server
-                sURL = "https://cors.bridged.cc/" + sURL;
+                const sURL = "http://data.fixer.io/api/latest?access_key=" + "5b80344db7aec5d65deb6fedd17ca62e";
 
                 $http.get(sURL,
                     {
-                        headers: {
-                            'X-Requested-With': 'XMLHttpRequest'
-                        },
                         timeout: 5000
                     }
                 ).then(function (response) {
