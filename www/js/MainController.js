@@ -68,15 +68,15 @@ angular.module('app')
                     "fullname": "Icelandic Krona"
                 },
                 "JPY": {
-                    "show": false,
+                    "show": true,
                     "fullname": "Japanese Yen"
                 },
                 "KRW": {
-                    "show": false,
+                    "show": true,
                     "fullname": "South Korean Won"
                 },
                 "MXN": {
-                    "show": true,
+                    "show": false,
                     "fullname": "Mexican Peso"
                 },
                 "MYR": {
